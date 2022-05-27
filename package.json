@@ -1,0 +1,38 @@
+{
+  "name": "simple-object-base",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "prepare": "node createEnv.js && node init.js",
+    "pretty": "prettier --write .",
+    "docs": "apidoc -i lib -o build",
+    "init-db": "node init.js",
+    "dev:nodemon": "nodemon --watch lib --exec 'yarn dev'",
+    "dev": "apidoc -i lib -o build -c apidoc.json -t template && node server.js",
+    "build": "node init.js && rm -rf dist && apidoc -i lib -o build -c apidoc.json -t template && webpack --mode development",
+    "start": "node ./dist/server.js",
+    "prod": "yarn install && rm -rf dist && rm -rf build && apidoc -i lib -o build -c apidoc.json -t template && webpack --mode development && rm -rf build && node ./dist/server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apidoc": "0.51.1",
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "generate-api-key": "^1.0.0",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "babel-loader": "^8.2.5",
+    "html-loader": "^3.1.0",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-node-externals": "^3.0.0"
+  }
+}

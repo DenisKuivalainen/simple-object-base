@@ -1,0 +1,11 @@
+{
+  "name": "Simple Object Base",
+  "version": "1.0.0",
+  "template": {
+    "forceLanguage": "en",
+    "showRequiredLabels": false,
+    "withGenerator": false,
+    "withCompare": false
+  },
+  "order": ["DB", "Table", "Object"]
+}
