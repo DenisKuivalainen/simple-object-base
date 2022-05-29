@@ -13,7 +13,7 @@ const { deleteTable } = require("./lib/metods");
 require("dotenv").config();
 
 const app = express();
-const port = 4001;
+const port = process.env.PORT || 4000;
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
@@ -44,5 +44,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`DB listening on port ${port}`);
+  console.log(`SOB listening on port ${port}`);
 });

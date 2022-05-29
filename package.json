@@ -12,7 +12,7 @@
     "dev": "apidoc -i lib -o build -c apidoc.json -t template && node server.js",
     "build": "node init.js && rm -rf dist && apidoc -i lib -o build -c apidoc.json -t template && webpack --mode development",
     "start": "node ./dist/server.js",
-    "prod": "yarn install && rm -rf dist && rm -rf build && apidoc -i lib -o build -c apidoc.json -t template && webpack --mode development && rm -rf build && node ./dist/server.js"
+    "prod": "git pull && yarn install && rm -rf dist && rm -rf build && apidoc -i lib -o build -c apidoc.json -t template && webpack --mode development && rm -rf build && node ./dist/server.js"
   },
   "author": "",
   "license": "ISC",
