@@ -1,5 +1,7 @@
-const express = require("express");
-const bodyParser = require("body-parser");
+import express, {Express, Request, Response, NextFunction} from "express"
+import bodyParser from "body-parser";
+import endpoints from "./lib/endpoints"
+
 const {
   putDB,
   deleteDB,
@@ -8,15 +10,15 @@ const {
   updateItem,
   deleteItem,
   putTable,
-} = require("./lib/endpoints");
-const { deleteTable } = require("./lib/metods");
-require("dotenv").config();
+  deleteTable
+} = endpoints
 
-const app = express();
+
+const app: Express = express();
 const port = process.env.PORT || 4000;
 
 app.use(bodyParser.json());
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   if (req.baseUrl !== "" && req.headers["x-api-key"] !== process.env.API_KEY) {
     res.status(403);
     res.send({ error: "Api key not specified" });
@@ -38,7 +40,7 @@ app.delete("/:db", deleteDB);
 
 app.use(express.static("build"));
 
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(400);
   res.send({ error: err.message });
 });

@@ -31,6 +31,10 @@ body {
   background-color: var(--background);
 }
 
+#api-_footer {
+  color: var(--white)
+}
+
 .pull-right .well {
   background-color: rgb(0, 0, 0, 0) !important;
   border: none !important;

@@ -1,9 +1,10 @@
-const fs = require("fs");
+import fs from "fs"
+import { SOBRecord } from "./types";
 
-const makePath = (path = "") => `${__dirname}/../database/${path}`;
-const makeTableName = (n) => `${n}.sob`;
+const makePath = (path?: string) => `${process.env.ROOT_DIR}/database/${path || ""}`;
+const makeTableName = (n: string) => `${n}.sob`;
 
-const checkDB = (db) => {
+const checkDB = (db: string) => {
   try {
     if (!db || !db.length) throw Error();
 
@@ -14,7 +15,7 @@ const checkDB = (db) => {
   }
 };
 
-const checkTable = (db, table) => {
+const checkTable = (db: string, table: string) => {
   try {
     if (!db || !db.length || !table || !table.length) throw Error();
 
@@ -24,7 +25,7 @@ const checkTable = (db, table) => {
   }
 };
 
-const createDB = (db) => {
+const createDB = (db: string) => {
   try {
     fs.mkdirSync(makePath(db));
     return true;
@@ -33,7 +34,7 @@ const createDB = (db) => {
   }
 };
 
-const createTable = (db, table) => {
+const createTable = (db: string, table: string) => {
   try {
     if (checkTable(db, table)) throw Error();
 
@@ -47,7 +48,7 @@ const createTable = (db, table) => {
   }
 };
 
-const deleteDB = (db) => {
+const deleteDB = (db: string) => {
   try {
     if (!checkDB(db)) throw Error();
     fs.readdirSync(makePath(db)).forEach((f) => {
@@ -60,7 +61,7 @@ const deleteDB = (db) => {
   }
 };
 
-const deleteTable = (db, table) => {
+const deleteTable = (db: string, table: string) => {
   try {
     if (!checkTable(db, table)) throw Error();
     fs.rmSync(makePath(`${db}/${makeTableName(table)}`));
@@ -70,7 +71,7 @@ const deleteTable = (db, table) => {
   }
 };
 
-const updateTable = (db, table, data) => {
+const updateTable = (db: string, table: string, data: Record<string, any>) => {
   try {
     if (!checkTable(db, table)) throw Error();
 
@@ -84,18 +85,18 @@ const updateTable = (db, table, data) => {
   }
 };
 
-const readTable = (db, table) => {
+const readTable = (db: string, table: string) => {
   try {
     if (!checkTable(db, table)) throw Error();
 
     const data = fs.readFileSync(makePath(`${db}/${makeTableName(table)}`));
-    return JSON.parse(data.toString());
+    return JSON.parse(data.toString()) as SOBRecord[];
   } catch (e) {
     return;
   }
 };
 
-module.exports = {
+export default {
   checkDB,
   checkTable,
   createDB,

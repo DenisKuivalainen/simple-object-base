@@ -1,25 +1,26 @@
-const fs = require("./fileSystem");
+import fs from "./fileSystem"
+import { SOBData, SOBRecord } from "./types";
 
-const createDB = (db) => {
+const createDB = (db: string) => {
   if (fs.checkDB(db)) throw Error(`DB "${db}" already exists.`);
   if (!fs.createDB(db)) throw Error("Failed to create DB.");
   return "DB successfully created.";
 };
 
-const deleteDB = (db) => {
+const deleteDB = (db: string) => {
   if (!fs.checkDB(db)) throw Error(`DB "${db}" does not exist.`);
   if (!fs.deleteDB(db)) throw Error("Failed to delete DB.");
   return "DB successfully deleted.";
 };
 
-const createTable = (db, table) => {
+const createTable = (db: string, table: string) => {
   if (!fs.checkDB(db)) throw Error(`DB "${db}" does not exist.`);
   if (fs.checkTable(db, table)) throw Error(`Table "${table}" already exists.`);
   if (!fs.createTable(db, table)) throw Error("Failed to create table.");
   return "Table successfully created.";
 };
 
-const deleteTable = (db, table) => {
+const deleteTable = (db: string, table: string) => {
   if (!fs.checkDB(db)) throw Error(`DB "${db}" does not exist.`);
   if (!fs.checkTable(db, table))
     throw Error(`Table "${table}" does not exist.`);
@@ -27,7 +28,7 @@ const deleteTable = (db, table) => {
   return "Table successfully deleted.";
 };
 
-const get = (db, table, searchFields) => {
+const get = (db: string, table: string, searchFields: SOBData) => {
   if (!fs.checkDB(db)) throw Error(`DB "${db}" does not exist.`);
   if (!fs.checkTable(db, table))
     throw Error(`Table "${table}" does not exist.`);
@@ -49,7 +50,7 @@ const get = (db, table, searchFields) => {
   return data;
 };
 
-const put = (db, table, data) => {
+const put = (db: string, table: string, data: SOBRecord) => {
   if (!fs.checkDB(db)) throw Error(`DB "${db}" does not exist.`);
   if (!fs.checkTable(db, table))
     throw Error(`Table "${table}" does not exist.`);
@@ -68,7 +69,7 @@ const put = (db, table, data) => {
   return "Item created successfully.";
 };
 
-const update = (db, table, data) => {
+const update = (db: string, table: string, data: SOBRecord) => {
   if (!fs.checkDB(db)) throw Error(`DB "${db}" does not exist.`);
   if (!fs.checkTable(db, table))
     throw Error(`Table "${table}" does not exist.`);
@@ -94,33 +95,23 @@ const update = (db, table, data) => {
   return "Item updated successfully.";
 };
 
-const _delete = (db, table, searchFields) => {
+const _delete = (db: string, table: string, id: string) => {
   if (!fs.checkDB(db)) throw Error(`DB "${db}" does not exist.`);
   if (!fs.checkTable(db, table))
     throw Error(`Table "${table}" does not exist.`);
   const data = fs.readTable(db, table);
   if (!data) throw Error(`Failed to read from table "${table}".`);
 
-  const fieldsArr = Object.entries(searchFields);
-
-  const afterDelete =
-    searchFields && fieldsArr.length
-      ? data.filter((d) => {
-          return !fieldsArr.every(([k, v]) => {
-            return d[k] === v;
-          });
-        })
-      : [];
+  const afterDelete =data.filter((d) => d.id !== id)
 
   if (!fs.updateTable(db, table, afterDelete))
     throw Error(`Failed to write to table "${table}".`);
   if (data.length - afterDelete.length === 0) return "No items were deleted.";
-  return data.length - afterDelete.length > 1
-    ? "Items deleted successfully."
-    : "Item deleted successfully.";
+
+  return "Item deleted successfully.";
 };
 
-module.exports = {
+export default{
   createDB,
   deleteDB,
   createTable,

@@ -1,6 +1,6 @@
 {
   "name": "simple-object-base",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "server.js",
   "scripts": {
@@ -9,21 +9,23 @@
     "docs": "apidoc -i lib -o build",
     "init-db": "node init.js",
     "dev:nodemon": "nodemon --watch lib --exec 'yarn dev'",
-    "dev": "apidoc -i lib -o build -c apidoc.json -t template && node server.js",
-    "build": "node init.js && rm -rf dist && apidoc -i lib -o build -c apidoc.json -t template && webpack --mode development",
-    "start": "node ./dist/server.js",
-    "prod": "git pull && yarn install && rm -rf dist && rm -rf build && apidoc -i lib -o build -c apidoc.json -t template && webpack --mode development && rm -rf build && node ./dist/server.js"
+    "dev": "apidoc -i lib -o build -c apidoc.json -t template && tsc && node index.js",
+    "build": "node init.js && rm -rf dist && apidoc -i lib -o build -c apidoc.json -t template && tsc",
+    "start": "node start.js",
+    "prod": "git pull && yarn install && rm -rf dist && rm -rf build && apidoc -i lib -o build -c apidoc.json -t template && tsc && rm -rf build && node index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/express": "^4.17.13",
     "apidoc": "0.51.1",
     "body-parser": "^1.20.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "generate-api-key": "^1.0.0",
     "nodemon": "^2.0.16",
-    "prettier": "^2.6.2"
+    "prettier": "^2.6.2",
+    "typescript": "^4.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
