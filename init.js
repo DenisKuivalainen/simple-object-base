@@ -1,5 +1,4 @@
 const fs = require("fs");
-process.env.ROOT_DIR = __dirname
 
 try {
   fs.readdirSync(`${__dirname}/database`);
