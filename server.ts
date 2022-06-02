@@ -1,6 +1,7 @@
-import express, {Express, Request, Response, NextFunction} from "express"
+import express, { Express } from "express";
 import bodyParser from "body-parser";
-import endpoints from "./lib/endpoints"
+import endpoints from "./lib/endpoints";
+import middleware from "./lib/middleware";
 
 const {
   putDB,
@@ -8,28 +9,24 @@ const {
   getItem,
   putItem,
   updateItem,
+  batchUpdate,
   deleteItem,
   putTable,
-  deleteTable
-} = endpoints
-
+  deleteTable,
+} = endpoints;
 
 const app: Express = express();
 const port = process.env.PORT || 4000;
 
 app.use(bodyParser.json());
-app.use((req: Request, res: Response, next: NextFunction) => {
-  if (req.baseUrl !== "" && req.headers["x-api-key"] !== process.env.API_KEY) {
-    res.status(403);
-    res.send({ error: "Api key not specified" });
-    return;
-  }
-  return next();
-});
+app.use(middleware.apiKeyCheck);
+
+app.use(middleware.logger);
 
 app.post("/:db/:table/get", getItem);
 app.put("/:db/:table/put", putItem);
 app.post("/:db/:table/update", updateItem);
+app.post("/:db/:table/update/batch", batchUpdate);
 app.delete("/:db/:table/delete", deleteItem);
 
 app.put("/:db/:table", putTable);
@@ -40,10 +37,7 @@ app.delete("/:db", deleteDB);
 
 app.use(express.static("build"));
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  res.status(400);
-  res.send({ error: err.message });
-});
+app.use(middleware.errorHandler);
 
 app.listen(port, () => {
   console.log(`SOB listening on port ${port}`);

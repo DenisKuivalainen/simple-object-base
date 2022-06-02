@@ -1,4 +1,4 @@
-require("dotenv").config()
-process.env.ROOT_DIR = __dirname
+require("dotenv").config();
+process.env.ROOT_DIR = __dirname;
 
-require('./dist/server')
+require("./dist/server");

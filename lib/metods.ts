@@ -1,4 +1,4 @@
-import fs from "./fileSystem"
+import fs from "./fileSystem";
 import { SOBData, SOBRecord } from "./types";
 
 const createDB = (db: string) => {
@@ -95,6 +95,40 @@ const update = (db: string, table: string, data: SOBRecord) => {
   return "Item updated successfully.";
 };
 
+const batchUpdate = (
+  db: string,
+  table: string,
+  { items: data }: { items: SOBRecord[] }
+) => {
+  if (!fs.checkDB(db)) throw Error(`DB "${db}" does not exist.`);
+  if (!fs.checkTable(db, table))
+    throw Error(`Table "${table}" does not exist.`);
+  if (!data || !data.length) throw Error(`No data to update.`);
+  if (data.some((d) => !d.id)) throw Error(`Not all items have specified ID.`);
+  if (data.some((d) => Object.keys(d).length < 2))
+    throw Error(`Not all items have specified update parameters.`);
+
+  const tableData = fs.readTable(db, table);
+  if (!tableData) throw Error(`Failed to read from table "${table}".`);
+  if(!data.every(({id}) => 
+    tableData.some(d => d.id === id)
+  ))throw Error(`Some IDs of provided items do not exist in table "${table}".`);
+
+  const updatedItems = [
+    ...tableData.filter((d) => data.every(({ id }) => id !== d.id)),
+    ...tableData
+      .filter((d) => data.some(({ id }) => id === d.id))
+      .map((d) => {
+        const u = data.filter(({ id }) => id === d.id)[0];
+        return { ...d, ...u };
+      }),
+  ];
+  if (!fs.updateTable(db, table, updatedItems))
+    throw Error(`Failed to write to table "${table}".`);
+
+  return "Item updated successfully.";
+};
+
 const _delete = (db: string, table: string, id: string) => {
   if (!fs.checkDB(db)) throw Error(`DB "${db}" does not exist.`);
   if (!fs.checkTable(db, table))
@@ -102,7 +136,7 @@ const _delete = (db: string, table: string, id: string) => {
   const data = fs.readTable(db, table);
   if (!data) throw Error(`Failed to read from table "${table}".`);
 
-  const afterDelete =data.filter((d) => d.id !== id)
+  const afterDelete = data.filter((d) => d.id !== id);
 
   if (!fs.updateTable(db, table, afterDelete))
     throw Error(`Failed to write to table "${table}".`);
@@ -111,7 +145,7 @@ const _delete = (db: string, table: string, id: string) => {
   return "Item deleted successfully.";
 };
 
-export default{
+export default {
   createDB,
   deleteDB,
   createTable,
@@ -119,5 +153,6 @@ export default{
   get,
   put,
   update,
+  batchUpdate,
   delete: _delete,
 };

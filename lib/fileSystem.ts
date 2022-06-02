@@ -1,7 +1,8 @@
-import fs from "fs"
+import fs from "fs";
 import { SOBRecord } from "./types";
 
-const makePath = (path?: string) => `${process.env.ROOT_DIR}/database/${path || ""}`;
+const makePath = (path?: string) =>
+  `${process.env.ROOT_DIR}/database/${path || ""}`;
 const makeTableName = (n: string) => `${n}.sob`;
 
 const checkDB = (db: string) => {

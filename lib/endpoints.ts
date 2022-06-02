@@ -1,4 +1,4 @@
-import methods from "./metods"
+import methods from "./metods";
 import { Request, Response } from "express";
 
 const putDB = (req: Request, res: Response) => {
@@ -161,7 +161,7 @@ const putItem = (req: Request, res: Response) => {
 
 const updateItem = (req: Request, res: Response) => {
   /**
-   * @api {update} /:db/:table/update Update object
+   * @api {post} /:db/:table/update Update object
    * @apiVersion 1.0.0
    * @apiGroup Object
    *  @apiName updateObject
@@ -182,6 +182,33 @@ const updateItem = (req: Request, res: Response) => {
    *     }
    */
   res.send({ data: methods.update(req.params.db, req.params.table, req.body) });
+};
+const batchUpdate = (req: Request, res: Response) => {
+  /**
+   * @api {post} /:db/:table/update/batch Batch update objects
+   * @apiVersion 1.2.0
+   * @apiGroup Object
+   *  @apiName batchUpdateObjects
+   *
+   * @apiParam (Path) {String} db DB name (should exist)
+   * @apiParam (Path) {String} table Table name (should exist)
+   *
+   * @apiHeader {String} x-api-key Api key value
+   *
+   * @apiParam (Body) {Object[]} items Array of items to update
+   * @apiParam (Body) {String} items.id Unique ID of item
+   * @apiParam (Body) items.params Any destructed params that should be updated in the object
+   *
+   * @apiSuccess {String} data  Success message
+   * @apiSuccessExample Success response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *       "data": "Items updated successfully."
+   *     }
+   */
+  res.send({
+    data: methods.batchUpdate(req.params.db, req.params.table, req.body),
+  });
 };
 
 const deleteItem = (req: Request, res: Response) => {
@@ -205,7 +232,13 @@ const deleteItem = (req: Request, res: Response) => {
    *       "data": "Item created successfully."
    *     }
    */
-  res.send({ data: methods.delete(req.params.db, req.params.table, req.body.id as string) });
+  res.send({
+    data: methods.delete(
+      req.params.db,
+      req.params.table,
+      req.body.id as string
+    ),
+  });
 };
 
 export default {
@@ -216,5 +249,6 @@ export default {
   getItem,
   putItem,
   updateItem,
+  batchUpdate,
   deleteItem,
 };

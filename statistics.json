@@ -1,0 +1,42 @@
+{
+  "/automatic/players/get": {
+    "POST": {
+      "200": 38
+    }
+  },
+  "/automatic/travelers/get": {
+    "POST": {
+      "200": 42
+    }
+  },
+  "/automatic/map/get": {
+    "POST": {
+      "200": 146
+    }
+  },
+  "/automatic/map/update": {
+    "POST": {
+      "200": 14
+    }
+  },
+  "/automatic/players/update": {
+    "POST": {
+      "200": 14
+    }
+  },
+  "/automatic/travelers/update": {
+    "POST": {
+      "200": 1400
+    }
+  },
+  "/automatic/towns/get": {
+    "POST": {
+      "200": 2
+    }
+  },
+  "/automatic/towns/update": {
+    "POST": {
+      "200": 120
+    }
+  }
+}
